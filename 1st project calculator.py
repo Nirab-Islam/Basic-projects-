@@ -1,4 +1,4 @@
-```python
+"```python
 import tkinter as tk
 
 # ==========================================
@@ -119,7 +119,7 @@ for (text, row, col, btn_type) in buttons_layout:
     )
     btn.grid(row=row, column=col, sticky="nsew", padx=5, pady=5)
 
-# ==========================================
+# =================and=========================
 # APPLICATION START
 # ==========================================
 
