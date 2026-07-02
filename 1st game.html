@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  <!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEENI Jump Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        #game-container {
+            width: 600px;
+            height: 200px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #535353;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        #player {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            /* শুরুতে ব্যাকগ্রাউন্ড কালার থাকবে, ছবি দিলে এটি ইমেজ দেখাবে */
+            background-color: #008CBA; 
+            background-size: cover;
+        }
+        #obstacle {
+            width: 30px;
+            height: 50px;
+            position: absolute;
+            bottom: 0;
+            right: -30px;
+            background-color: #f44336;
+            background-size: cover;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 20px;
+            color: #535353;
+            font-weight: bold;
+        }
+        #game-over-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #f44336;
+            font-weight: bold;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container" onclick="jump()">
+    <div id="score">Score: 0</div>
+    <div id="game-over-text">GAME OVER<br><span style="font-size:14px; color:#555;">আবার খেলতে স্ক্রিনে টাচ করুন</span></div>
+    <div id="player" id="player-img"></div>
+    <div id="obstacle" id="obstacle-img"></div>
+</div>
+
+<script>
+    // =================================================================
+    // 🛠️ এখানে তোমার নিজের তৈরি করা পিএনজি (PNG) ছবির লিংক বসাবে 🛠️
+    // =================================================================
+    
+    // ১। তোমার ক্যারেক্টারের ছবি (সাইজ হতে হবে: 40px প্রস্থ × 40px উচ্চতা)
+    const PLAYER_IMAGE_URL = ""; // উদাহরণ: "meeni_character.png"
+    
+    // ২। বাধার বা ক্যালাসের ছবি (সাইজ হতে হবে: 30px প্রস্থ × 50px উচ্চতা)
+    const OBSTACLE_IMAGE_URL = ""; // উদাহরণ: "cactus.png"
+    
+    // =================================================================
+
+    // ইমেজ সেট করার লজিক (তুমি লিংক দিলে এটি সক্রিয় হবে, না দিলে কালার দেখাবে)
+    const playerEl = document.getElementById('player');
+    const obstacleEl = document.getElementById('obstacle');
+    
+    if(PLAYER_IMAGE_URL !== "") {
+        playerEl.style.backgroundImage = `url('${PLAYER_IMAGE_URL}')`;
+        playerEl.style.backgroundColor = "transparent";
+    }
+    if(OBSTACLE_IMAGE_URL !== "") {
+        obstacleEl.style.backgroundImage = `url('${OBSTACLE_IMAGE_URL}')`;
+        obstacleEl.style.backgroundColor = "transparent";
+    }
+
+    // গেমের ভেতরের মেকানিজম বা লজিক
+    let isJumping = false;
+    let score = 0;
+    let isGameOver = false;
+    
+    let playerY = 0;
+    let obstacleX = 600;
+    let obstacleSpeed = 6;
+
+    // লাফ দেওয়ার ফাংশন
+    function jump() {
+        if (isGameOver) {
+            resetGame();
+            return;
+        }
+        if (isJumping) return;
+        
+        isJumping = true;
+        let upInterval = setInterval(() => {
+            if (playerY >= 120) { // কতটা উঁচুতে লাফাবে
+                clearInterval(upInterval);
+                let downInterval = setInterval(() => {
+                    if (playerY <= 0) {
+                        clearInterval(downInterval);
+                        isJumping = false;
+                        playerY = 0;
+                    }
+                    playerY -= 6;
+                    playerEl.style.bottom = playerY + 'px';
+                }, 12);
+            }
+            playerY += 6;
+            playerEl.style.bottom = playerY + 'px';
+        }, 12);
+    }
+
+    // গেমের লুপ (বাধা চালানো এবং সংঘর্ষ বা কলিশন চেক করা)
+    function gameLoop() {
+        if (isGameOver) return;
+
+        // বাধা বাম দিকে সরানো
+        obstacleX -= obstacleSpeed;
+        if (obstacleX < -30) {
+            obstacleX = 600; // আবার ডান দিকে ফিরে যাবে
+            score += 10;
+            document.getElementById('score').innerText = "Score: " + score;
+            
+            // স্কোর বাড়ার সাথে সাথে স্পীড একটু বাড়ানো
+            if(score % 50 === 0) obstacleSpeed += 0.5; 
+        }
+        obstacleEl.style.left = obstacleX + 'px';
+
+        // হিটবক্স বা কলিশন চেক (ডাইনোসর বাধাকে ধাক্কা খেলো কিনা)
+        // প্লেয়ারের অবস্থান x=50 থেকে x=90 পর্যন্ত (প্রস্থ ৪০)
+        if (obstacleX > 50 && obstacleX < 90 && playerY < 50) {
+            isGameOver = true;
+            document.getElementById('game-over-text').style.display = 'block';
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    // গেম ওভার হওয়ার পর আবার নতুন করে শুরু করা
+    function resetGame() {
+        isGameOver = false;
+        score = 0;
+        obstacleX = 600;
+        obstacleSpeed = 6;
+        playerY = 0;
+        playerEl.style.bottom = '0px';
+        document.getElementById('score').innerText = "Score: 0";
+        document.getElementById('game-over-text').style.display = 'none';
+        gameLoop();
+    }
+
+    // গেমটি চালু করা
+    gameLoop();
+</script>
+
+</body>
+</html>
+
+  
+  
+  
+  
+</body>
+
+</html>

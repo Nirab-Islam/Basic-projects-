@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+
+<body>
+  <!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Interface</title>
+  <style>
+    /* পুরো ফর্মটাকে স্ক্রিনের মাঝখানে আনার জন্য সাধারণ স্টাইল */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .login-container {
+      background: white;
+      padding: 50px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    /* এই অংশটি বাটন দুটিকে ডানে-বামে সেট করছে */
+    .button-group {
+      display: flex;
+      justify-content: space-between; /* একটি বামে, আরেকটি ডানে পাঠাবে */
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .exit-btn { background-color: #f44336; color: white; }
+    .next-btn { background-color: #4CAF50; color: white; }
+    .meeni-btn { background-color: #008CBA; color: white; padding: 5px 15px; border-radius: 15px; }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <button class="meeni-btn"><b>MEENI</b></button>
+    <h5>Please submit your details to login</h5>
+
+    <!-- পাসওয়ার্ড ইনপুট টাইপ 'password' দিলে টাইপ করার সময় ডট (.) দেখাবে -->
+    <input type="text" placeholder="Username">
+    <input type="password" placeholder="Password">
+
+    <!-- বাটন গ্রুপ যা সিএসএস দিয়ে ডানে-বামে সাজানো হয়েছে -->
+    <div class="button-group">
+      <button class="exit-btn" type="button">Exit</button>
+      <button class="next-btn" type="submit">Next</button>
+    </div>
+  </div>
+
+</body>
+</html>
+
+  
+  
+</body>
+
+</html>
