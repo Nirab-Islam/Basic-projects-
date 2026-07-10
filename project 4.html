@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEENI Dynamic Workspace</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 340px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: #008CBA; }
+    textarea {
+      height: 150px;
+      resize: none;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between; 
+      margin-top: 15px;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    button:active { transform: scale(0.98); }
+    .exit-btn { background-color: #f44336; color: white; }
+    .next-btn { background-color: #4CAF50; color: white; }
+    .save-btn { background-color: #FF9800; color: white; }
+    .new-btn { background-color: #008CBA; color: white; }
+    .meeni-btn { background-color: #008CBA; color: white; padding: 6px 20px; border-radius: 20px; border: none; margin-bottom: 10px; }
+    
+    .page { display: none; }
+    .active { display: block; }
+    
+    #status-msg {
+      font-size: 12px;
+      color: #4CAF50;
+      margin-top: 5px;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="page1" class="container page active">
+    <button class="meeni-btn"><b>MEENI</b></button>
+    <h3 style="color: #333; margin-top: 5px;">Welcome</h3>
+    <p style="color: #666; font-size: 14px;">Please submit your details to login</p>
+
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+
+    <div class="button-group">
+      <button class="exit-btn" type="button" onclick="alert('Exit Successful')">Exit</button>
+      <button class="next-btn" type="button" onclick="validateAndLogin()">Next</button>
+    </div>
+  </div>
+
+  <div id="page2" class="container page">
+    <button class="meeni-btn"><b>MEENI Notepad</b></button>
+    <h4 style="color: #333; margin: 5px 0;">✍️ Right Down Here</h4>
+    <p style="color: #888; font-size: 12px; margin-bottom: 10px;">এখানে আপনার আইডিয়া বা নোট লিখুন</p>
+    
+    <textarea id="note-text" placeholder="Start typing your amazing ideas..."></textarea>
+    <div id="status-msg">✓ মেমোরিতে সত্যি সত্যি সেভ হয়েছে!</div>
+    
+    <div class="button-group">
+      <button class="save-btn" type="button" onclick="saveNote()">Save</button>
+      <button class="new-btn" type="button" onclick="openNewPage()">New Page</button>
+    </div>
+    
+    <div class="button-group">
+      <button class="exit-btn" type="button" style="background-color: #777;" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    // লগইন চেক
+    function validateAndLogin() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      if (user === "" || pass === "") {
+        alert("ইউজারনেম এবং পাসওয়ার্ড দুটোই লিখুন!");
+        return;
+      }
+      if (pass.length >= 3) {
+        // লগইন সফল হলে পেজ ২-এ যাবে এবং আগের জমানো নোট লোড করবে
+        document.getElementById('page1').classList.remove('active');
+        document.getElementById('page2').classList.add('active');
+        loadSavedNote(); 
+      } else {
+        alert("পাসওয়ার্ড অন্তত ৩ অক্ষরের দিন।");
+      }
+    }
+
+    // সত্যি সত্যি ডেটা সেভ করার ফাংশন (Local Storage)
+    function saveNote() {
+      const noteContent = document.getElementById('note-text').value;
+      
+      // ব্রাউজারের লোকাল মেমোরিতে 'meeni_saved_note' নামে টেক্সটটি সেভ রাখা হচ্ছে
+      localStorage.setItem('meeni_saved_note', noteContent);
+      
+      // সেভ হওয়ার পর একটা সুন্দর মেসেজ দেখানো
+      const msg = document.getElementById('status-msg');
+      msg.style.display = 'block';
+      setTimeout(() => { msg.style.display = 'none'; }, 2500); // ২.৫ সেকেন্ড পর মেসেজ চলে যাবে
+    }
+
+    // আগে সেভ করা নোট থাকলে তা লোড করার ফাংশন
+    function loadSavedNote() {
+      const savedContent = localStorage.getItem('meeni_saved_note');
+      if (savedContent) {
+        document.getElementById('note-text').value = savedContent;
+      }
+    }
+
+    // নতুন পেজ বা ফাঁকা নোট ওপেন করার ফাংশন
+    function openNewPage() {
+      if(confirm("Do you really want to open new page ??? Save first or documents will delete afte opening new page ")) {
+        document.getElementById('note-text').value = ""; // টেক্সট এরিয়া একদম খালি করে দেওয়া
+        document.getElementById('note-text').placeholder = "নতুন পেজে আপনার আইডিয়া লিখুন...";
+      }
+    }
+
+    // লগআউট ফাংশন
+    function logout() {
+      document.getElementById('page2').classList.remove('active');
+      document.getElementById('page1').classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
+
+<body>
+  
+</body>
+
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title></title>
+</head>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEENI Dynamic Multi-Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .button-group {
+      display: flex;
+      justify-content: space-between; 
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .exit-btn { background-color: #f44336; color: white; }
+    .next-btn { background-color: #4CAF50; color: white; }
+    .meeni-btn { background-color: #008CBA; color: white; padding: 5px 15px; border-radius: 15px; }
+    
+    /* 🛠️ ডাইনামিক পেজ লুকানোর ম্যাজিক সিএসএস */
+    .page {
+      display: none; /* শুরুতে সব পেজ লুকিয়ে থাকবে */
+    }
+    .active {
+      display: block; /* শুধু active ক্লাসের পেজটি স্ক্রিনে দেখাবে */
+    }
+    .content-box {
+      text-align: left;
+      background: #f9f9f9;
+      padding: 10px;
+      border-left: 4px solid #008CBA;
+      margin: 15px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="page1" class="container page active">
+    <button class="meeni-btn"><b>MEENI</b></button>
+    <h5>Please submit your details to login</h5>
+
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+
+    <div class="button-group">
+      <button class="exit-btn" type="button" onclick="alert('Exit Successful')">Exit</button>
+      <button class="next-btn" type="button" onclick="validateAndGoToPage2()">Next</button>
+    </div>
+  </div>
+
+  <div id="page2" class="container page">
+    <button class="meeni-btn"><b>MEENI - Page 2</b></button>
+    <h4>স্বাগতম দ্বিতীয় পেজে!</h4>
+    
+    <div class="content-box">
+      <p>এখানে তুমি তোমার পছন্দমতো যেকোনো লেখা লিখে রাখতে পারো। যেমন: <b>MEENI ওটিটি প্ল্যাটফর্মের প্রথম ঝলক!</b></p>
+    </div>
+    
+    <p style="font-size: 12px; color: #666;">নিচে আরও কন্টেন্ট দেওয়া থাকবে...</p>
+
+    <div class="button-group">
+      <button class="exit-btn" type="button" onclick="goToPage(1)">Back</button>
+      <button class="next-btn" type="button" onclick="goToPage(3)">Next</button>
+    </div>
+  </div>
+
+  <div id="page3" class="container page">
+    <button class="meeni-btn"><b>MEENI - Final Page</b></button>
+    <h4>অভিনন্দন! এটি ৩ নম্বর পেজ</h4>
+    
+    <div class="content-box">
+      <p>এখানে অন্য আরেকটি কন্টেন্ট শো হচ্ছে। তুমি চাইলে এই পেজে তোমার তৈরি করা গেমের লিংক বা ভিডিওর ডেমো রাখতে পারো।</p>
+    </div>
+
+    <div class="button-group">
+      <button class="exit-btn" type="button" onclick="goToPage(2)">Back</button>
+      <button class="next-btn" type="button" onclick="alert('সব পেজ দেখা শেষ!')">Finish</button>
+    </div>
+  </div>
+
+  <script>
+    // লগইন পেজের ভ্যালিডেশন চেক করার ফাংশন
+    function validateAndGoToPage2() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      // চেক করা হচ্ছে ইনপুট খালি কিনা
+      if (user === "" || pass === "") {
+        alert("ইউজারনেম এবং পাসওয়ার্ড দেওয়া বাধ্যতামূলক!");
+        return;
+      }
+
+      // তোমার রিকোয়ারমেন্ট: ভুল পাসওয়ার্ড বা যা ইচ্ছে দিলেও লগইন হবে
+      // আমরা শুধু চেক করছি পাসওয়ার্ডটি যেন ৩ অক্ষরের বড় হয় (একটি বেসিক চেক)
+      if (pass.length >= 3) {
+        goToPage(2); // ২ নম্বর পেজে নিয়ে যাও
+      } else {
+        alert("নিরাপত্তার জন্য পাসওয়ার্ডটি অন্তত ৩ অক্ষরের দিন (যেকোনো কিছু দিলেই হবে)।");
+      }
+    }
+
+    // পেজ পরিবর্তন করার মূল ডাইনামিক ফাংশন
+    function goToPage(pageNumber) {
+      // প্রথমে সব পেজ থেকে 'active' ক্লাসটি সরিয়ে লুকিয়ে ফেলা হচ্ছে
+      const allPages = document.querySelectorAll('.page');
+      allPages.forEach(page => {
+        page.classList.remove('active');
+      });
+
+      // এবার যে পেজ নাম্বারে যেতে চাই, শুধু সেটিতে 'active' ক্লাস যুক্ত করে দেখানো হচ্ছে
+      const targetPage = document.getElementById('page' + pageNumber);
+      if (targetPage) {
+        targetPage.classList.add('active');
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+<body>
+  
+</body>
+
+</html>
